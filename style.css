@@ -9,12 +9,28 @@ body {
     overflow: hidden;
     height: 100vh;
     width: 100vw;
+    background-color: black;
 }
 
+.bg-image {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('img/bg.jpg');
+    background-size: cover;
+    background-position: center;
+    z-index: -1; /* Behind all other content */
+    filter: blur(40px);
+  transform: scale(1.1);
+  overflow: hidden; /* on the parent container */
+  opacity: 0.5; /* Adjust opacity for a subtle effect */
+}
 .container {
     min-height: 100vh;
     width: 100vw;
-    background: linear-gradient(135deg, #0f172a 0%, #1f0831 50%, #0b1120 100%);
+    /* background: linear-gradient(135deg, #0f172a 0%, #1f0831 50%, #0b1120 100%); */
     position: relative;
     overflow: hidden;
     display: flex;
@@ -487,6 +503,7 @@ line-height: normal;
     pointer-events: none;
     z-index: 1; /* Behind main bubbles */
     overflow: hidden;
+    opacity: 0.4; /* Slightly visible */
 }
 
 /* Create multiple decorative bubbles */
@@ -495,7 +512,7 @@ line-height: normal;
     content: '';
     position: absolute;
     border-radius: 50%;
-    background: url('img/bubble_img.png') center/cover;
+    background: url('img/bubble_bg.png') center/cover;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     animation: floatUp 15s infinite linear;
@@ -550,7 +567,7 @@ line-height: normal;
 .decorative-bubbles .deco-bubble {
     position: absolute;
     border-radius: 50%;
-    background: url('img/bubble_img.png') center/cover;
+    background: url('img/bubble_bg.png') center/cover;
     backdrop-filter: blur(8px);
     border: 1px solid rgba(255, 255, 255, 0.15);
     pointer-events: none;

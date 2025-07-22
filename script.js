@@ -143,7 +143,7 @@ function applyProximityRipple(hoveredBubble) {
             
             // Direct style application - CSS transitions will handle smoothness
             bubble.style.transform = `translate(-50%, -50%) translateZ(${originalZDepth}px) scale(${hoverScale})`;
-            bubble.style.filter = `brightness(1.05) contrast(0.95) drop-shadow(0 25px 50px rgba(0, 0, 0, 0.5))`;
+            bubble.style.filter = `brightness(1.05) contrast(0.85) drop-shadow(0 25px 50px rgba(0, 0, 0, 0.5))`;
             bubble.style.zIndex = '100';
             return;
         }
@@ -170,7 +170,7 @@ function applyProximityRipple(hoveredBubble) {
             
             // Direct style application
             bubble.style.transform = `translate(calc(-50% + ${directionX}px), calc(-50% + ${directionY}px)) translateZ(${originalZDepth}px) scale(${proximityScale})`;
-            bubble.style.filter = `brightness(${brightnessValue}) contrast(0.85)`;
+            bubble.style.filter = `brightness(${brightnessValue}) contrast(0.75)`;
             bubble.style.zIndex = `${newZIndex}`;
             
             console.log(`📍 Moving bubble ${distance.toFixed(0)}px away - Scale: ${proximityScale.toFixed(2)}`);
@@ -237,7 +237,7 @@ function createBubble(data) {
            background-size: cover, cover; 
            background-position: center, center; 
            background-repeat: no-repeat, no-repeat;
-           background-blend-mode: screen;`
+           background-blend-mode: hard-light;`
         : `background-image: url('img/bubble_img.png'); 
            background-size: cover; 
            background-position: center; 
