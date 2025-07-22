@@ -3,9 +3,9 @@ const BUBBLE_MARGIN = 20; // Margin from viewport edges (px)
 const BUBBLE_CONFIG = [
     {
         id: 'travel-music',
-        title: 'Travel Music', 
-        icon: '🎵', 
+        title: 'Travel Music',
         color: 'linear-gradient(135deg, #a855f7, #ec4899)',
+        backgroundImage: 'img/Travel_Music.png',
         // Position as percentage (will be constrained to viewport with margins)
         x: 32, y: 30, z: 30,
         // Size multiplier (1.0 = base size, 0.8 = smaller, 1.2 = larger)
@@ -15,9 +15,9 @@ const BUBBLE_CONFIG = [
     },
     {
         id: 'live-sports',
-        title: 'Live Sports', 
-        icon: '▶️', 
+        title: 'Live Sports',
         color: 'linear-gradient(135deg, #60a5fa, #06b6d4)',
+        backgroundImage: 'img/Live_Sports.png',
         x: 50, y: 35, z: 120,
         sizeMultiplier: 0.9, // Larger bubble
         zIndex: 10,
@@ -25,9 +25,9 @@ const BUBBLE_CONFIG = [
     },
     {
         id: 'trending',
-        title: 'Trending', 
-        icon: '⭐', 
+        title: 'Trending',
         color: 'linear-gradient(135deg, #fb7185, #f97316)',
+        backgroundImage: 'img/Trending.png',
         x: 15, y: 50, z: 25,
         sizeMultiplier: 0.1,
         zIndex: 3,
@@ -35,9 +35,9 @@ const BUBBLE_CONFIG = [
     },
     {
         id: 'suspense-horror',
-        title: 'Suspense Horror', 
-        icon: '📷', 
+        title: 'Suspense Horror',
         color: 'linear-gradient(135deg, #fbbf24, #eab308)',
+        backgroundImage: 'img/Suspense_Horror.png',
         x: 75, y: 30, z: 90,
         sizeMultiplier: 0.7,
         zIndex: 12,
@@ -45,9 +45,9 @@ const BUBBLE_CONFIG = [
     },
     {
         id: 'friends-la',
-        title: 'Friends In LA', 
-        icon: '👥', 
+        title: 'Friends In LA',
         color: 'linear-gradient(135deg, #4ade80, #10b981)',
+        backgroundImage: 'img/Friends.png',
         x: 85, y: 60, z: 40,
         sizeMultiplier: 0.8,
         zIndex: 5,
@@ -55,9 +55,9 @@ const BUBBLE_CONFIG = [
     },
     {
         id: 'romantic-drama',
-        title: 'Romantic Drama', 
-        icon: '❤️', 
+        title: 'Romantic Drama',
         color: 'linear-gradient(135deg, #ec4899, #f43f5e)',
+        backgroundImage: 'img/Romantic_Drama.png',
         x: 28, y: 70, z: 80,
         sizeMultiplier: 0.9,
         zIndex: 10,
@@ -65,9 +65,9 @@ const BUBBLE_CONFIG = [
     },
     {
         id: 'edge-escapes',
-        title: 'Edge-T Or Escapes', 
-        icon: '🌍', 
+        title: 'Edge-T Or Escapes',
         color: 'linear-gradient(135deg, #f97316, #ef4444)',
+        backgroundImage: 'img/Edge_Escapes.png',
         x: 68, y: 72, z: 50,
         sizeMultiplier: 0.85,
         zIndex: 6,
@@ -75,44 +75,15 @@ const BUBBLE_CONFIG = [
     },
     {
         id: 'slice-life',
-        title: 'Slice Of Life', 
-        icon: '⚡', 
+        title: 'Slice Of Life',
         color: 'linear-gradient(135deg, #8b5cf6, #a855f7)',
+        backgroundImage: 'img/Nostalgie.png',
         x: 48, y: 75, z: 100,
         sizeMultiplier: 0.7,
         zIndex: 50,
         preserve3D: true // Enable 3D perspective
     }
 ];
-
-// Calculate constrained position within viewport margins
-function getConstrainedPosition(xPercent, yPercent, bubbleSize) {
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-    
-    // Convert percentage to pixels
-    let xPx = (xPercent / 100) * vw;
-    let yPx = (yPercent / 100) * vh;
-    
-    // Calculate bubble radius
-    const bubbleRadius = bubbleSize / 2;
-    
-    // Apply constraints with margins
-    const minX = BUBBLE_MARGIN + bubbleRadius;
-    const maxX = vw - BUBBLE_MARGIN - bubbleRadius;
-    const minY = BUBBLE_MARGIN + bubbleRadius;
-    const maxY = vh - BUBBLE_MARGIN - bubbleRadius;
-    
-    // Clamp positions within bounds
-    xPx = Math.max(minX, Math.min(maxX, xPx));
-    yPx = Math.max(minY, Math.min(maxY, yPx));
-    
-    // Convert back to percentage for CSS
-    return {
-        x: (xPx / vw) * 100,
-        y: (yPx / vh) * 100
-    };
-}
 
 // Generate responsive bubble positions based on screen size with constraints
 function getResponsivePositions() {
@@ -166,13 +137,13 @@ function applyProximityRipple(hoveredBubble) {
             // Get original values for proper scaling
             const originalZDepth = bubble.dataset.originalZDepth || '0';
             const originalScale = parseFloat(bubble.dataset.originalScale) || 1;
-            const hoverScale = originalScale * 1.2; // 40% larger on hover
+            const hoverScale = originalScale * 1.4; // 40% larger on hover
             
             console.log(`🔍 Scaling focused bubble to ${hoverScale}x (original: ${originalScale}x)`);
             
             // Direct style application - CSS transitions will handle smoothness
             bubble.style.transform = `translate(-50%, -50%) translateZ(${originalZDepth}px) scale(${hoverScale})`;
-            bubble.style.filter = `brightness(1.3) drop-shadow(0 25px 50px rgba(0, 0, 0, 0.5))`;
+            bubble.style.filter = `brightness(1.05) contrast(0.95) drop-shadow(0 25px 50px rgba(0, 0, 0, 0.5))`;
             bubble.style.zIndex = '100';
             return;
         }
@@ -199,52 +170,10 @@ function applyProximityRipple(hoveredBubble) {
             
             // Direct style application
             bubble.style.transform = `translate(calc(-50% + ${directionX}px), calc(-50% + ${directionY}px)) translateZ(${originalZDepth}px) scale(${proximityScale})`;
-            bubble.style.filter = `brightness(${brightnessValue}) contrast(0.9)`;
+            bubble.style.filter = `brightness(${brightnessValue}) contrast(0.85)`;
             bubble.style.zIndex = `${newZIndex}`;
             
             console.log(`📍 Moving bubble ${distance.toFixed(0)}px away - Scale: ${proximityScale.toFixed(2)}`);
-        }
-    });
-}
-
-function applyDirectionalSpread(hoveredBubble) {
-    console.log('🌊 Applying proximity ripple effect');
-    
-    const allBubbles = document.querySelectorAll('.bubble');
-    const hoveredRect = hoveredBubble.getBoundingClientRect();
-    const hoveredCenterX = hoveredRect.left + hoveredRect.width / 2;
-    const hoveredCenterY = hoveredRect.top + hoveredRect.height / 2;
-    
-    allBubbles.forEach(bubble => {
-        if (bubble === hoveredBubble) {
-            // Highlight the focused bubble
-            bubble.style.transform = 'translate(-50%, -50%) scale(1.2)';
-            bubble.style.filter = 'brightness(1.2) drop-shadow(0 20px 40px rgba(0, 0, 0, 0.3))';
-            bubble.style.zIndex = '100';
-            bubble.style.transition = 'all 0.3s ease-out';
-            return;
-        }
-        
-        const rect = bubble.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-        
-        const dx = centerX - hoveredCenterX;
-        const dy = centerY - hoveredCenterY;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        
-        // Simple proximity effect - if within 400px, move away
-        if (distance < 400 && distance > 20) {
-            const pushDistance = Math.max(80, 200 - distance/2); // Push further if closer
-            const directionX = (dx / distance) * pushDistance;
-            const directionY = (dy / distance) * pushDistance;
-            
-            bubble.style.transform = `translate(calc(-50% + ${directionX}px), calc(-50% + ${directionY}px)) scale(0.9)`;
-            bubble.style.filter = 'brightness(0.8)';
-            bubble.style.transition = 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
-            bubble.style.zIndex = '5';
-            
-            console.log(`📍 Moving bubble ${distance.toFixed(0)}px away - Direction: ${directionX.toFixed(0)}, ${directionY.toFixed(0)}`);
         }
     });
 }
@@ -302,9 +231,20 @@ function createBubble(data) {
     bubble.style.transform = initialTransform;
     bubble.style.filter = `brightness(${brightnessFromDepth}) drop-shadow(0 ${zDepth/5}px ${zDepth/3}px rgba(0, 0, 0, ${0.1 + zDepth/1000}))`;
     
-    bubble.innerHTML = `<div class="bubble-inner" style="background: ${data.color};">
+    // Create layered background - content image behind bubble texture
+    const backgroundStyle = data.backgroundImage 
+        ? `background-image: url('img/bubble_img.png'), url('${data.backgroundImage}'); 
+           background-size: cover, cover; 
+           background-position: center, center; 
+           background-repeat: no-repeat, no-repeat;
+           background-blend-mode: screen;`
+        : `background-image: url('img/bubble_img.png'); 
+           background-size: cover; 
+           background-position: center; 
+           background-repeat: no-repeat;`;
+
+    bubble.innerHTML = `<div class="bubble-inner" style="${backgroundStyle}">
         <div class="bubble-content">
-            <div class="bubble-icon">${data.icon}</div>
             <div class="bubble-title">${data.title}</div>
         </div>
     </div>`;
@@ -335,20 +275,17 @@ function initBubbles() {
     container.innerHTML = '';
     
     BUBBLE_CONFIG.forEach((config, i) => {
-        // Calculate size first to determine constraints
+        // Calculate size first
         const bubbleSize = getFixedSizeValue(config);
         
-        // Get constrained position within viewport margins
-        const constrainedPos = getConstrainedPosition(config.x, config.y, bubbleSize);
-        
-        // Create bubble data object
+        // Use original percentage positions directly (no viewport-based constraints)
         const bubbleData = {
             id: config.id,
             title: config.title,
-            icon: config.icon,
             color: config.color,
-            x: constrainedPos.x,
-            y: constrainedPos.y,
+            backgroundImage: config.backgroundImage, // Pass background image if available
+            x: config.x,  // Use original percentage directly
+            y: config.y,  // Use original percentage directly
             z: config.z,
             zDepth: config.z,
             zIndex: config.zIndex,
@@ -359,7 +296,7 @@ function initBubbles() {
         const bubble = createBubble(bubbleData);
         container.appendChild(bubble);
         
-        console.log(`✅ Created bubble "${config.title}" at (${constrainedPos.x.toFixed(1)}%, ${constrainedPos.y.toFixed(1)}%) with size ${bubbleSize}px`);
+        console.log(`✅ Created bubble "${config.title}" at (${config.x}%, ${config.y}%) with size ${bubbleSize}px`);
     });
 }
 

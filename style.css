@@ -14,7 +14,7 @@ body {
 .container {
     min-height: 100vh;
     width: 100vw;
-    background: linear-gradient(135deg, #0f172a 0%, #581c87 50%, #0f172a 100%);
+    background: linear-gradient(135deg, #0f172a 0%, #1f0831 50%, #0b1120 100%);
     position: relative;
     overflow: hidden;
     display: flex;
@@ -174,8 +174,7 @@ line-height: normal;
                 z-index 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     z-index: 10;
     transform-style: preserve-3d;
-    /* Disable floating animation to prevent conflicts with hover effects */
-    /* animation: subtleFloat 6s ease-in-out infinite; */
+    /* Remove CSS animation - let JavaScript handle all transforms */
     will-change: transform, filter, z-index;
     /* Responsive sizing - adjusted via JavaScript with viewport units */
     min-width: clamp(100px, 20vw, 180px);
@@ -187,31 +186,31 @@ line-height: normal;
     transform-origin: center center;
 }
 
-/* Enhanced floating animation that preserves z-depth */
+/* Enhanced floating animation that doesn't interfere with positioning */
 @keyframes subtleFloat {
     0%, 100% { 
-        transform: translate(-50%, -50%) rotateX(0deg) rotateY(0deg);
+        transform: translateY(0px) rotateX(0deg) rotateY(0deg);
     }
     25% { 
-        transform: translate(-50%, -50%) rotateX(2deg) rotateY(-1deg);
+        transform: translateY(-6px) rotateX(1deg) rotateY(-0.5deg);
     }
     50% { 
-        transform: translate(-50%, -50%) rotateX(-1deg) rotateY(2deg);
+        transform: translateY(5px) rotateX(-0.5deg) rotateY(1deg);
     }
     75% { 
-        transform: translate(-50%, -50%) rotateX(1deg) rotateY(-2deg);
+        transform: translateY(-2px) rotateX(0.5deg) rotateY(-1deg);
     }
 }
 
-/* Staggered animation delays for more natural movement */
-.bubble:nth-child(1) { animation-delay: 0s; animation-duration: 6.2s; }
-.bubble:nth-child(2) { animation-delay: 1.1s; animation-duration: 5.8s; }
-.bubble:nth-child(3) { animation-delay: 2.3s; animation-duration: 6.5s; }
-.bubble:nth-child(4) { animation-delay: 3.2s; animation-duration: 5.9s; }
-.bubble:nth-child(5) { animation-delay: 4.1s; animation-duration: 6.1s; }
-.bubble:nth-child(6) { animation-delay: 0.7s; animation-duration: 6.3s; }
-.bubble:nth-child(7) { animation-delay: 1.8s; animation-duration: 5.7s; }
-.bubble:nth-child(8) { animation-delay: 2.9s; animation-duration: 6.4s; }
+/* Staggered animation delays for more natural movement - applied to inner elements */
+.bubble:nth-child(1) .bubble-inner { animation-delay: 0s; animation-duration: 6.2s; }
+.bubble:nth-child(2) .bubble-inner { animation-delay: 1.1s; animation-duration: 5.8s; }
+.bubble:nth-child(3) .bubble-inner { animation-delay: 2.3s; animation-duration: 6.5s; }
+.bubble:nth-child(4) .bubble-inner { animation-delay: 3.2s; animation-duration: 5.9s; }
+.bubble:nth-child(5) .bubble-inner { animation-delay: 4.1s; animation-duration: 7.1s; }
+.bubble:nth-child(6) .bubble-inner { animation-delay: 0.7s; animation-duration: 6.3s; }
+.bubble:nth-child(7) .bubble-inner { animation-delay: 1.8s; animation-duration: 5.7s; }
+.bubble:nth-child(8) .bubble-inner { animation-delay: 1.9s; animation-duration: 7.4s; }
 
 /* Remove all hover effects - let JavaScript handle everything */
 .bubble:hover {
@@ -249,6 +248,8 @@ line-height: normal;
         inset 0 2px 4px rgba(255, 255, 255, 0.1),
         inset 0 -2px 4px rgba(0, 0, 0, 0.1);
     transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    /* Add subtle floating animation to inner element */
+    animation: subtleFloat 6s ease-in-out infinite;
 }
 
 .bubble:hover .bubble-inner {
@@ -256,13 +257,14 @@ line-height: normal;
         0 40px 80px rgba(0, 0, 0, 0.4),
         inset 0 4px 8px rgba(255, 255, 255, 0.2),
         inset 0 -4px 8px rgba(0, 0, 0, 0.2);
+    
 }
 
 /* Perfect centering for bubble content */
 .bubble-content {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
     text-align: center;
     width: 100%;
@@ -272,8 +274,8 @@ line-height: normal;
     position: relative;
     transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     transform-style: preserve-3d;
-    backdrop-filter: blur(20px);
-    background: rgba(255, 255, 255, 0.1);
+    /* backdrop-filter: blur(20px); */
+    /* background: rgba(255, 255, 255, 0.1); */
     border: 1px solid rgba(255, 255, 255, 0.2);
     /* Ensure content stays centered */
     box-sizing: border-box;
@@ -282,7 +284,7 @@ line-height: normal;
 
 .bubble:hover .bubble-content {
     background: rgba(255, 255, 255, 0.25);
-    backdrop-filter: blur(30px);
+    /* backdrop-filter: blur(30px); */
     box-shadow: 
         0 25px 50px rgba(0, 0, 0, 0.3),
         inset 0 2px 4px rgba(255, 255, 255, 0.4);
@@ -307,12 +309,13 @@ line-height: normal;
     filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
 }
 
-/* Centered bubble title */
+/* Bottom-aligned bubble title */
 .bubble-title {
     font-weight: 700;
     font-size: clamp(12px, 2.5vw, 16px);
     line-height: 1.2;
     margin: 0;
+    margin-bottom: clamp(8px, 1.5vw, 15px);
     transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     display: flex;
@@ -382,7 +385,7 @@ line-height: normal;
     }
     50% { 
         transform: translate(-50%, -50%) scale(1.25) translateZ(30px) rotateX(5deg) rotateY(5deg);
-        filter: brightness(1.3) drop-shadow(0 20px 40px rgba(0, 0, 0, 0.5));
+        filter: brightness(1) drop-shadow(0 20px 40px rgba(0, 0, 0, 0.5));
     }
     100% { 
         transform: translate(-50%, -50%) scale(1) translateZ(0px);
@@ -471,3 +474,150 @@ line-height: normal;
     }
 }
 
+
+/* Add this at the end of your CSS file, before the media queries */
+
+/* Floating Decorative Background Bubbles */
+.decorative-bubbles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1; /* Behind main bubbles */
+    overflow: hidden;
+}
+
+/* Create multiple decorative bubbles */
+.decorative-bubbles::before,
+.decorative-bubbles::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    background: url('img/bubble_img.png') center/cover;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    animation: floatUp 15s infinite linear;
+    opacity: 0.6;
+}
+
+/* First decorative bubble */
+.decorative-bubbles::before {
+    width: 80px;
+    height: 80px;
+    left: 10%;
+    animation-delay: 0s;
+    animation-duration: 20s;
+}
+
+/* Second decorative bubble */
+.decorative-bubbles::after {
+    width: 120px;
+    height: 120px;
+    right: 15%;
+    animation-delay: -5s;
+    animation-duration: 25s;
+}
+
+/* Additional decorative bubbles using pseudo-elements */
+.decorative-bubbles {
+    background-image: 
+        radial-gradient(circle at 20% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(236, 72, 153, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(96, 165, 250, 0.08) 0%, transparent 50%);
+}
+
+/* Floating animation for decorative bubbles */
+@keyframes floatUp {
+    0% {
+        transform: translateY(100vh) translateX(0px) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.6;
+    }
+    90% {
+        opacity: 0.6;
+    }
+    100% {
+        transform: translateY(-100px) translateX(100px) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Additional floating bubbles with different sizes and speeds */
+.decorative-bubbles .deco-bubble {
+    position: absolute;
+    border-radius: 50%;
+    background: url('img/bubble_img.png') center/cover;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+/* Individual decorative bubble styles */
+.decorative-bubbles .deco-bubble:nth-child(1) {
+    width: 60px;
+    height: 60px;
+    left: 5%;
+    animation: floatUp 18s infinite linear;
+    animation-delay: 0s;
+}
+
+.decorative-bubbles .deco-bubble:nth-child(2) {
+    width: 40px;
+    height: 40px;
+    left: 25%;
+    animation: floatUp 22s infinite linear;
+    animation-delay: -3s;
+}
+
+.decorative-bubbles .deco-bubble:nth-child(3) {
+    width: 90px;
+    height: 90px;
+    right: 20%;
+    animation: floatUp 16s infinite linear;
+    animation-delay: -8s;
+}
+
+.decorative-bubbles .deco-bubble:nth-child(4) {
+    width: 70px;
+    height: 70px;
+    right: 5%;
+    animation: floatUp 24s infinite linear;
+    animation-delay: -12s;
+}
+
+/* Subtle glow effect for decorative bubbles */
+.decorative-bubbles .deco-bubble::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, rgba(168, 85, 247, 0.1), rgba(236, 72, 153, 0.1));
+    z-index: -1;
+    filter: blur(4px);
+}
+
+/* Responsive decorative bubbles */
+@media (max-width: 768px) {
+    .decorative-bubbles .deco-bubble {
+        opacity: 0.7;
+    }
+    
+    .decorative-bubbles .deco-bubble:nth-child(1) { width: 40px; height: 40px; }
+    .decorative-bubbles .deco-bubble:nth-child(2) { width: 30px; height: 30px; }
+    .decorative-bubbles .deco-bubble:nth-child(3) { width: 50px; height: 50px; }
+    .decorative-bubbles .deco-bubble:nth-child(4) { width: 35px; height: 35px; }
+}
+
+@media (max-width: 480px) {
+    .decorative-bubbles {
+        opacity: 0.5; /* Reduce opacity on small screens */
+    }
+}
