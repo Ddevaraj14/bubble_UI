@@ -496,7 +496,106 @@ function initBubbles() {
     });
 }
 
-document.addEventListener('DOMContentLoaded', initBubbles);
+// Search functionality
+function initSearch() {
+    const searchInput = document.querySelector('.search-input');
+    const searchBtn = document.querySelector('.search-btn');
+    
+    if (!searchInput || !searchBtn) return;
+    
+    // Handle search input events
+    searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase().trim();
+        searchBubbles(query);
+    });
+    
+    // Handle Enter key
+    searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            const query = e.target.value.toLowerCase().trim();
+            if (query) {
+                performSearch(query);
+            }
+        }
+    });
+    
+    // Handle search button click
+    searchBtn.addEventListener('click', () => {
+        const query = searchInput.value.toLowerCase().trim();
+        if (query) {
+            performSearch(query);
+        } else {
+            searchInput.focus();
+        }
+    });
+    
+    // Clear search when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.search-container')) {
+            searchInput.value = '';
+            clearSearch();
+        }
+    });
+}
+
+function searchBubbles(query) {
+    const bubbles = document.querySelectorAll('.bubble');
+    
+    bubbles.forEach(bubble => {
+        const title = bubble.querySelector('.bubble-title')?.textContent.toLowerCase() || '';
+        const bubbleId = bubble.id.replace('-bubble', '').replace('-', ' ');
+        
+        if (query === '' || title.includes(query) || bubbleId.includes(query)) {
+            bubble.style.opacity = '1';
+            bubble.style.transform = bubble.dataset.originalTransform || bubble.style.transform;
+        } else {
+            bubble.style.opacity = '0.3';
+            bubble.style.transform = (bubble.dataset.originalTransform || bubble.style.transform) + ' scale(0.8)';
+        }
+    });
+}
+
+function performSearch(query) {
+    console.log(`🔍 Searching for: "${query}"`);
+    
+    // Find matching bubble
+    const matchingBubble = BUBBLE_CONFIG.find(config => 
+        config.title.toLowerCase().includes(query) || 
+        config.id.toLowerCase().includes(query)
+    );
+    
+    if (matchingBubble) {
+        const bubbleElement = document.getElementById(`${matchingBubble.id}-bubble`);
+        if (bubbleElement) {
+            // Highlight the matching bubble
+            bubbleElement.style.boxShadow = '0 0 30px rgba(255, 255, 255, 0.8)';
+            bubbleElement.style.transform = bubbleElement.dataset.originalTransform + ' scale(1.1)';
+            
+            // Remove highlight after 2 seconds
+            setTimeout(() => {
+                bubbleElement.style.boxShadow = '';
+                bubbleElement.style.transform = bubbleElement.dataset.originalTransform;
+            }, 2000);
+        }
+    } else {
+        // Show "no results" feedback
+        console.log(`❌ No results found for: "${query}"`);
+    }
+}
+
+function clearSearch() {
+    const bubbles = document.querySelectorAll('.bubble');
+    bubbles.forEach(bubble => {
+        bubble.style.opacity = '1';
+        bubble.style.transform = bubble.dataset.originalTransform || bubble.style.transform;
+        bubble.style.boxShadow = '';
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    initBubbles();
+    initSearch();
+});
 
 // Recalculate bubble positions on window resize to maintain margins
 let resizeTimeout;

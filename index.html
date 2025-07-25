@@ -15,20 +15,35 @@
         <!-- Header -->
         <header class="header">
             <div class="logo">
-                <div class="logo-icon">S</div>
-                <span class="logo-text">Synamedia</span>
-            </div>
-            
-            <nav class="nav">
+                <span class="logo-text"><img src="img/logo.png" alt="Synamedia Logo"></span>
+                            <nav class="nav">
                 <a href="#" class="nav-link">Home</a>
                 <a href="#" class="nav-link">Guide</a>
                 <a href="#" class="nav-link">TV Shows</a>
                 <a href="#" class="nav-link">Movies</a>
             </nav>
+            </div>
             
             <div class="header-actions">
-                <button class="action-btn">🌐</button>
-                <div class="profile-avatar"></div>
+                <div class="search-container">
+                    <button class="action-btn search-btn" title="Search">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="m21 21-4.35-4.35"/>
+                        </svg>
+                    </button>
+                    <input type="text" class="search-input" placeholder="Search..." />
+                </div>
+                <button class="action-btn notification-btn" title="Notifications">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
+                        <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+                    </svg>
+                    <span class="notification-badge">3</span>
+                </button>
+                <div class="profile-avatar">
+                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face" alt="Profile" class="profile-image">
+                </div>
             </div>
         </header>
 
