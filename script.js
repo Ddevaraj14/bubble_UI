@@ -6,6 +6,7 @@ const BUBBLE_CONFIG = [
         title: 'Travel Music',
         color: 'linear-gradient(135deg, #a855f7, #ec4899)',
         backgroundImage: 'img/Travel_Music.png',
+        videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
         // Position as percentage (will be constrained to viewport with margins)
         x: 32, y: 30, z: 30,
         // Size multiplier (1.0 = base size, 0.8 = smaller, 1.2 = larger)
@@ -18,6 +19,7 @@ const BUBBLE_CONFIG = [
         title: 'Live Sports',
         color: 'linear-gradient(135deg, #60a5fa, #06b6d4)',
         backgroundImage: 'img/Live_Sports.png',
+        videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
         x: 50, y: 35, z: 120,
         sizeMultiplier: 0.9, // Larger bubble
         zIndex: 10,
@@ -28,6 +30,7 @@ const BUBBLE_CONFIG = [
         title: 'Trending',
         color: 'linear-gradient(135deg, #fb7185, #f97316)',
         backgroundImage: 'img/Trending.png',
+        videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
         x: 15, y: 50, z: 25,
         sizeMultiplier: 0.1,
         zIndex: 3,
@@ -38,6 +41,7 @@ const BUBBLE_CONFIG = [
         title: 'Suspense Horror',
         color: 'linear-gradient(135deg, #fbbf24, #eab308)',
         backgroundImage: 'img/Suspense_Horror.png',
+        videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
         x: 75, y: 30, z: 90,
         sizeMultiplier: 0.7,
         zIndex: 12,
@@ -48,6 +52,7 @@ const BUBBLE_CONFIG = [
         title: 'Friends In LA',
         color: 'linear-gradient(135deg, #4ade80, #10b981)',
         backgroundImage: 'img/Friends.png',
+        videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
         x: 85, y: 60, z: 40,
         sizeMultiplier: 0.8,
         zIndex: 5,
@@ -58,6 +63,7 @@ const BUBBLE_CONFIG = [
         title: 'Romantic Drama',
         color: 'linear-gradient(135deg, #ec4899, #f43f5e)',
         backgroundImage: 'img/Romantic_Drama.png',
+        videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4',
         x: 28, y: 70, z: 80,
         sizeMultiplier: 0.9,
         zIndex: 10,
@@ -68,6 +74,7 @@ const BUBBLE_CONFIG = [
         title: 'Edge-T Or Escapes',
         color: 'linear-gradient(135deg, #f97316, #ef4444)',
         backgroundImage: 'img/Edge_Escapes.png',
+        videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4',
         x: 68, y: 72, z: 50,
         sizeMultiplier: 0.85,
         zIndex: 6,
@@ -78,6 +85,7 @@ const BUBBLE_CONFIG = [
         title: 'Slice Of Life',
         color: 'linear-gradient(135deg, #8b5cf6, #a855f7)',
         backgroundImage: 'img/Nostalgie.png',
+        videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4',
         x: 48, y: 75, z: 100,
         sizeMultiplier: 0.7,
         zIndex: 50,
@@ -371,7 +379,17 @@ function createBubble(data) {
            background-position: center; 
            background-repeat: no-repeat;`;
 
+    // Create bubble content with video and poster
+    const videoElement = data.videoUrl 
+        ? `<video class="bubble-video" muted loop preload="metadata">
+               <source src="${data.videoUrl}" type="video/mp4">
+           </video>` 
+        : '';
+
     bubble.innerHTML = `<div class="bubble-inner" style="${backgroundStyle}">
+        ${videoElement}
+        <div class="bubble-poster" style="${backgroundStyle}"></div>
+        <div class="bubble-overlay"></div>
         <div class="bubble-content">
             <div class="bubble-title">${data.title}</div>
         </div>
@@ -388,12 +406,61 @@ function createBubble(data) {
     bubble.addEventListener('mouseenter', () => {
         console.log('🌊 Applying proximity ripple effect');
         applyProximityRipple(bubble);
+        // Start video on hover
+        playVideoOnHover(bubble);
     });
-    bubble.addEventListener('mouseleave', resetBubblePositions);
+    bubble.addEventListener('mouseleave', () => {
+        resetBubblePositions();
+        // Stop video on mouse leave
+        stopVideoOnLeave(bubble);
+    });
     applyClickZoom(bubble);
     addIdleFloatAnimation(bubble);
 
     return bubble;
+}
+
+// Video hover functionality
+function playVideoOnHover(bubble) {
+    const video = bubble.querySelector('.bubble-video');
+    const poster = bubble.querySelector('.bubble-poster');
+    
+    if (video && poster) {
+        console.log('🎬 Starting video playback on hover');
+        
+        // Fade out poster and fade in video
+        poster.style.transition = 'opacity 0.5s ease-in-out';
+        poster.style.opacity = '0';
+        
+        video.style.transition = 'opacity 0.5s ease-in-out';
+        video.style.opacity = '1';
+        
+        // Start video playback
+        video.currentTime = 0; // Start from beginning
+        video.play().catch(err => {
+            console.log('Video autoplay blocked:', err);
+        });
+    }
+}
+
+function stopVideoOnLeave(bubble) {
+    const video = bubble.querySelector('.bubble-video');
+    const poster = bubble.querySelector('.bubble-poster');
+    
+    if (video && poster) {
+        console.log('🎬 Stopping video playback on mouse leave');
+        
+        // Fade out video and fade in poster
+        video.style.transition = 'opacity 0.5s ease-in-out';
+        video.style.opacity = '0';
+        
+        poster.style.transition = 'opacity 0.5s ease-in-out';
+        poster.style.opacity = '1';
+        
+        // Stop and reset video
+        video.pause();
+        video.currentTime = 0;
+    }
 }
 
 function initBubbles() {
@@ -412,6 +479,7 @@ function initBubbles() {
             title: config.title,
             color: config.color,
             backgroundImage: config.backgroundImage, // Pass background image if available
+            videoUrl: config.videoUrl, // Pass video URL for hover functionality
             x: config.x,  // Use original percentage directly
             y: config.y,  // Use original percentage directly
             z: config.z,
