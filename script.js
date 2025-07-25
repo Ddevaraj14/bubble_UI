@@ -207,8 +207,138 @@ function addIdleFloatAnimation(bubble) {
 
 function applyClickZoom(bubble) {
     bubble.addEventListener('click', () => {
-        bubble.classList.add('zoom-effect');
+        // Prevent multiple clicks during transition
+        if (bubble.classList.contains('transitioning')) return;
+        
+        bubble.classList.add('zoom-effect', 'transitioning');
+        
+        // Preload the sports streaming page
+        preloadSportsPage().then(() => {
+            // Create smooth page transition with reveal effect
+            createRevealTransition(bubble);
+        });
+        
         setTimeout(() => bubble.classList.remove('zoom-effect'), 600);
+    });
+}
+
+function preloadSportsPage() {
+    return new Promise((resolve, reject) => {
+        // Create hidden iframe to preload the page
+        const preloadFrame = document.createElement('iframe');
+        preloadFrame.src = 'sports-streaming.html';
+        preloadFrame.style.cssText = `
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: none;
+            opacity: 0;
+            pointer-events: none;
+            z-index: -1;
+        `;
+        
+        preloadFrame.onload = () => {
+            console.log('Sports page preloaded successfully');
+            resolve(preloadFrame);
+        };
+        
+        preloadFrame.onerror = () => {
+            console.warn('Failed to preload sports page, proceeding anyway');
+            resolve(null);
+        };
+        
+        document.body.appendChild(preloadFrame);
+        
+        // Fallback timeout
+        setTimeout(() => {
+            resolve(preloadFrame);
+        }, 1000);
+    });
+}
+
+function createRevealTransition(clickedBubble) {
+    console.log('Starting seamless fullscreen scaling transition');
+    
+    // Exit other bubbles immediately
+    exitOtherBubbles(clickedBubble);
+    
+    // Create black transition overlay
+    const blackOverlay = document.createElement('div');
+    blackOverlay.className = 'black-transition-overlay';
+    document.body.appendChild(blackOverlay);
+    
+    // Get bubble position and viewport dimensions
+    const bubbleRect = clickedBubble.getBoundingClientRect();
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const maxDimension = Math.max(vw, vh);
+    const bubbleSize = parseFloat(clickedBubble.style.width) || 200;
+    const fullscreenScale = (maxDimension * 1.5) / bubbleSize; // Scale to cover entire screen
+    
+    // Setup clicked bubble for smooth scaling
+    clickedBubble.style.zIndex = '10001'; // Above black overlay
+    clickedBubble.style.transition = 'all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+    clickedBubble.style.transformOrigin = 'center center';
+    clickedBubble.classList.add('scaling-to-fullscreen');
+    
+    // Activate black overlay immediately
+    setTimeout(() => {
+        blackOverlay.classList.add('active');
+    }, 50);
+    
+    // Start seamless scaling immediately
+    setTimeout(() => {
+        // Scale bubble to fullscreen
+        clickedBubble.style.left = '50%';
+        clickedBubble.style.top = '50%';
+        clickedBubble.style.transform = `translate(-50%, -50%) scale(${fullscreenScale})`;
+        clickedBubble.style.borderRadius = '0%';
+        clickedBubble.style.opacity = '1';
+        
+        console.log(`Seamless scaling: Bubble to ${fullscreenScale}x with black background`);
+    }, 16); // Single frame delay for smooth animation start
+    
+    // Navigate to actual page at the right moment for seamless transition
+    setTimeout(() => {
+        window.location.href = 'sports-streaming.html';
+    }, 600); // Navigate earlier while bubble is still scaling
+}
+
+function exitOtherBubbles(clickedBubble) {
+    const allBubbles = document.querySelectorAll('.bubble');
+    const clickedRect = clickedBubble.getBoundingClientRect();
+    const clickedCenterX = clickedRect.left + clickedRect.width / 2;
+    const clickedCenterY = clickedRect.top + clickedRect.height / 2;
+    
+    allBubbles.forEach((bubble, index) => {
+        if (bubble === clickedBubble) return;
+        
+        // Calculate exit direction from clicked bubble
+        const bubbleRect = bubble.getBoundingClientRect();
+        const bubbleCenterX = bubbleRect.left + bubbleRect.width / 2;
+        const bubbleCenterY = bubbleRect.top + bubbleRect.height / 2;
+        
+        const deltaX = bubbleCenterX - clickedCenterX;
+        const deltaY = bubbleCenterY - clickedCenterY;
+        const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+        
+        // Normalize direction and create dramatic exit
+        const exitDistance = Math.max(window.innerWidth, window.innerHeight) * 1.5;
+        const exitX = (deltaX / distance) * exitDistance;
+        const exitY = (deltaY / distance) * exitDistance;
+        
+        // Add exit animation class and styles
+        bubble.classList.add('exiting-bubble');
+        bubble.style.transition = `all 1.0s cubic-bezier(0.25, 0.46, 0.45, 0.94)`;
+        bubble.style.zIndex = '9000';
+        
+        // Stagger the exit animations
+        setTimeout(() => {
+            bubble.style.transform = `translate(calc(-50% + ${exitX}px), calc(-50% + ${exitY}px)) scale(0.2) rotateX(${Math.random() * 180}deg) rotateY(${Math.random() * 180}deg)`;
+            bubble.style.opacity = '0';
+            
+            console.log(`Exiting bubble ${index + 1}`);
+        }, index * 40); // Reduced stagger for faster exits
     });
 }
 
@@ -222,14 +352,12 @@ function createBubble(data) {
     bubble.style.height = `${data.size}px`;
     bubble.style.zIndex = data.zIndex || 1;
     
-    // Apply 3D z-depth transformation for layered effect
+    // Apply 3D z-depth transformation for layered effect (without brightness)
     const zDepth = data.z || data.zDepth || 0;
     const scaleFromDepth = 0.8 + (zDepth / 150) * 0.4; // Scale based on depth (0.8 to 1.2)
-    const brightnessFromDepth = 0.7 + (zDepth / 150) * 0.5; // Brightness based on depth (0.7 to 1.2)
     
     const initialTransform = `translate(-50%, -50%) translateZ(${zDepth}px) scale(${scaleFromDepth})`;
     bubble.style.transform = initialTransform;
-    bubble.style.filter = `brightness(${brightnessFromDepth}) drop-shadow(0 ${zDepth/5}px ${zDepth/3}px rgba(0, 0, 0, ${0.1 + zDepth/1000}))`;
     
     // Create layered background - content image behind bubble texture
     const backgroundStyle = data.backgroundImage 

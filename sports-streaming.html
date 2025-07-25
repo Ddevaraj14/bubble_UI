@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sports Streaming - Live Sports & Events</title>
+    <link rel="stylesheet" href="sports-streaming.css">
+</head>
+<body>
+    
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            
+            <div class="hero-content">
+                <div class="hero-text">
+                    <button class="back-button" onclick="handleBackButton()">
+                        <span class="back-icon"></span>
+                        Back to Bubbles
+                    </button>
+
+                    <h1 class="hero-title">AFRICA CUP OF NATIONS</h1>
+                    <div class="hero-time">9:00 - 11:00 PM</div>
+                    <p class="hero-description">
+                        Bea, Thomas, and the rabbits have created a makeshift family, but despite his best efforts, Peter can't seem to shake his mischievous reputation.
+                    </p>
+                    <div class="hero-buttons">
+                        <button class="btn-primary">
+                            <span class="play-icon">▶</span>
+                            Watch
+                        </button>
+                        <button class="btn-secondary">
+                            <span class="info-icon">ⓘ</span>
+                            More Info
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-image">
+                <!-- Background image will be set via CSS -->
+            </div>
+            <div class="hero-overlay"></div>
+        </section>
+
+        <!-- Live Sports Section -->
+        <section class="content-section">
+            <h2 class="section-title">Live Sports</h2>
+            <div class="carousel-container">
+                <button class="carousel-arrow left" onclick="scrollCarousel('live-sports', -1)">‹</button>
+                <div class="content-grid" id="live-sports">
+                    <div class="content-card">
+                        <div class="card-image">
+                            <div class="live-badge">LIVE</div>
+                            <img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Africa Cup Of Nations" />
+                        </div>
+                        <div class="card-info">
+                            <h3>Africa Cup Of Nations</h3>
+                            <div class="card-time">10:00 - 12:45</div>
+                        </div>
+                    </div>
+
+                    <div class="content-card">
+                        <div class="card-image">
+                            <div class="live-badge">LIVE</div>
+                            <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Afterlife Of The Party" />
+                        </div>
+                        <div class="card-info">
+                            <h3>Afterlife Of The Party</h3>
+                            <div class="card-time">10:00 - 12:45</div>
+                        </div>
+                    </div>
+
+                    <div class="content-card">
+                        <div class="card-image">
+                            <div class="live-badge">LIVE</div>
+                            <img src="https://images.unsplash.com/photo-1546519638-68e109498ffc?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="BAL Vs CLE" />
+                        </div>
+                        <div class="card-info">
+                            <h3>BAL Vs CLE</h3>
+                            <div class="card-time">10:00 - 12:45</div>
+                        </div>
+                    </div>
+
+                    <div class="content-card">
+                        <div class="card-image">
+                            <div class="live-badge">LIVE</div>
+                            <img src="https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="England and Australia" />
+                        </div>
+                        <div class="card-info">
+                            <h3>England and Australia</h3>
+                            <div class="card-time">10:00 - 12:45</div>
+                        </div>
+                    </div>
+
+                    <div class="content-card">
+                        <div class="card-image">
+                            <div class="live-badge">LIVE</div>
+                            <img src="https://images.unsplash.com/photo-1551698618-1dfe5d97d256?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Anderson Cooper Full Circle" />
+                        </div>
+                        <div class="card-info">
+                            <h3>Anderson Cooper Full Circle</h3>
+                            <div class="card-time">10:00 - 11:00</div>
+                        </div>
+                    </div>
+
+                    <div class="content-card">
+                        <div class="card-image">
+                            <div class="live-badge">LIVE</div>
+                            <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Formula 1: Saudi Arabia" />
+                        </div>
+                        <div class="card-info">
+                            <h3>Formula 1: Saudi Arabia</h3>
+                            <div class="card-time">10:00 - 12:45</div>
+                        </div>
+                    </div>
+
+                    <div class="content-card">
+                        <div class="card-image">
+                            <div class="live-badge">LIVE</div>
+                            <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Hawks Vs Nets" />
+                        </div>
+                        <div class="card-info">
+                            <h3>Hawks Vs Nets</h3>
+                            <div class="card-time">10:00 - 11:30</div>
+                        </div>
+                    </div>
+                </div>
+                <button class="carousel-arrow right" onclick="scrollCarousel('live-sports', 1)">›</button>
+            </div>
+        </section>
+
+        <!-- My You Like Section -->
+        <section class="content-section">
+            <h2 class="section-title">My You Like</h2>
+            <div class="carousel-container">
+                <button class="carousel-arrow left" onclick="scrollCarousel('my-you-like', -1)">‹</button>
+                <div class="content-grid my-you-like" id="my-you-like">
+                    <div class="content-card">
+                        <div class="card-image">
+                            <img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Soccer Match" />
+                        </div>
+                    </div>
+
+                    <div class="content-card">
+                        <div class="card-image">
+                            <img src="https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Cricket Match" />
+                        </div>
+                    </div>
+
+                    <div class="content-card">
+                        <div class="card-image">
+                            <img src="https://images.unsplash.com/photo-1546519638-68e109498ffc?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Basketball Match" />
+                        </div>
+                    </div>
+
+                    <div class="content-card">
+                        <div class="card-image">
+                            <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Athletics" />
+                        </div>
+                    </div>
+
+                    <div class="content-card">
+                        <div class="card-image">
+                            <img src="https://images.unsplash.com/photo-1551698618-1dfe5d97d256?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Tennis Match" />
+                        </div>
+                    </div>
+
+                    <div class="content-card">
+                        <div class="card-image">
+                            <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Racing" />
+                        </div>
+                    </div>
+                </div>
+                <button class="carousel-arrow right" onclick="scrollCarousel('my-you-like', 1)">›</button>
+            </div>
+        </section>
+    </div>
+
+    <script src="sports-streaming.js"></script>
+</body>
+</html>

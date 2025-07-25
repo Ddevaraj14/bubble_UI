@@ -254,7 +254,7 @@ line-height: normal;
     border-radius: 50%;
     padding: 0;
     position: relative;
-    overflow: hidden;
+    overflow: visible; /* Allow ripples to show outside bubble */
     transform-style: preserve-3d;
     display: flex;
     justify-content: center;
@@ -313,7 +313,6 @@ line-height: normal;
     font-size: clamp(24px, 4vw, 36px);
     margin-bottom: clamp(8px, 1.5vw, 12px);
     transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
     display: flex;
     justify-content: center;
     align-items: center;
@@ -322,7 +321,6 @@ line-height: normal;
 
 .bubble:hover .bubble-icon {
     transform: scale(1.4) translateZ(15px) rotateY(15deg);
-    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
 }
 
 /* Bottom-aligned bubble title */
@@ -401,10 +399,168 @@ line-height: normal;
     }
     50% { 
         transform: translate(-50%, -50%) scale(1.25) translateZ(30px) rotateX(5deg) rotateY(5deg);
-        filter: brightness(1) drop-shadow(0 20px 40px rgba(0, 0, 0, 0.5));
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
     }
     100% { 
         transform: translate(-50%, -50%) scale(1) translateZ(0px);
+    }
+}
+
+/* Page Transition Animations */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* .zoom-effect {
+    animation: zoom-burst 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+@keyframes zoom-burst {
+    0% { 
+        transform: translate(-50%, -50%) scale(1) translateZ(0px);
+        opacity: 1;
+    }
+
+    100% { 
+        transform: translate(-50%, -50%) scale(5) translateZ(100px) rotateX(6deg) rotateY(6deg);
+        opacity: 0;
+    }
+} */
+
+/* Enhanced transition state for bubbles with reveal effect */
+.bubble.transitioning {
+    pointer-events: none;
+    z-index: 10001 !important;
+    will-change: transform, opacity;
+    transform-origin: center center;
+}
+
+/* Smooth fullscreen scaling for clicked bubble */
+.bubble.scaling-to-fullscreen {
+    pointer-events: none;
+    z-index: 10000 !important;
+    will-change: transform, opacity, border-radius;
+    transform-origin: center center !important;
+    transition: all 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+}
+
+/* Exit animation for other bubbles */
+.bubble.exiting-bubble {
+    pointer-events: none;
+    will-change: transform, opacity;
+    transform-origin: center center;
+    z-index: 0 !important;
+}
+
+/* Dramatic exit animations */
+@keyframes bubbleExitStagger {
+    0% {
+        transform: translate(-50%, -50%) scale(1) rotateX(0deg) rotateY(0deg);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(0) rotateX(180deg) rotateY(180deg);
+        opacity: 0;
+    }
+}
+
+/* Fullscreen scaling animation for clicked bubble */
+@keyframes fullscreenScale {
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+        border-radius: 50%;
+        opacity: 0;
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        border-radius: 0%;
+        opacity: 1;
+    }
+}
+
+/* Synchronized sports page scaling animation */
+@keyframes sportsPageScale {
+    0% {
+        transform: scale(0.4);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Seamless sports page scaling animation */
+@keyframes seamlessSportsScale {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.sports-preview-scaling {
+    animation: seamlessSportsScale 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    transform-origin: center center !important;
+}
+
+/* Page transition overlay styles */
+.page-transition-overlay {
+    backdrop-filter: blur(20px);
+}
+
+/* Enhanced zoom effect for reveal transition */
+.bubble.transitioning .bubble-inner {
+    animation: revealTransitionPulse 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    will-change: transform;
+    transform-origin: center center;
+}
+
+@keyframes revealTransitionPulse {
+    0% { 
+        transform: scale(1);
+    }
+    100% { 
+        transform: scale(2.2);
+    }
+}
+
+/* Enhanced bubble content glow for reveal transition */
+/* .bubble.transitioning .bubble-content {
+    animation: revealContentGlow 1.4s ease-in-out;
+    transform-origin: center center;
+}
+
+@keyframes revealContentGlow {
+    0% {
+        background: rgba(255, 255, 255, 0.1);
+        box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.1);
+        transform: scale(1);
+    }
+    100% {
+        background: rgba(255, 255, 255, 0.6);
+        box-shadow: inset 0 0 80px rgba(255, 255, 255, 0.5);
+        transform: scale(1.3);
+    }
+} */
+
+/* Reveal mask animation support */
+@keyframes revealMask {
+    0% {
+        width: 0;
+        height: 0;
+        opacity: 1;
+    }
+    100% {
+        width: 200vmax;
+        height: 200vmax;
+        opacity: 0.8;
     }
 }
 
@@ -637,4 +793,22 @@ line-height: normal;
     .decorative-bubbles {
         opacity: 0.5; /* Reduce opacity on small screens */
     }
+}
+
+/* Black screen overlay for fullscreen bubble transition */
+.black-transition-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #141414;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.black-transition-overlay.active {
+    opacity: 1;
 }
